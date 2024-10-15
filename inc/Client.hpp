@@ -4,9 +4,6 @@ class Client {
 	private:
 		int			_fd;
 		std::string	_ip;
-		std::string	_nickname;
-		std::string	_username;
-		std::string	_password;
 
 	public:
 		Client();

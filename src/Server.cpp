@@ -95,11 +95,15 @@ void	Server::acceptNewClient() {
 	socklen_t len = sizeof(newClient);
 
 	int newClientFd = accept(_fd, (sockaddr *)&(newClient), &len);
-	if (newClientFd == -1)
-		{std::cout << "accept() failed" << std::endl; return;}
+	if (newClientFd == -1) {
+		ERR("accept() failed");
+		return;
+	}
 
-	if (fcntl(newClientFd, F_SETFL, O_NONBLOCK) == -1)
-		{std::cout << "fcntl() failed" << std::endl; return;}
+	if (fcntl(newClientFd, F_SETFL, O_NONBLOCK) == -1) {
+		ERR("fcntl() failed");
+		return;
+	}
 
 	newPoll.fd = newClientFd;
 	newPoll.events = POLLIN;
