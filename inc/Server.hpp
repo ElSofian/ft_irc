@@ -1,4 +1,6 @@
-#include "Client.hpp"
+# include "Client.hpp"
+# include "User.hpp"
+# include "Channel.hpp"
 
 class Server {
 	private:
@@ -7,6 +9,8 @@ class Server {
 		std::string					_password;
 		static bool					_signal;
 		std::vector<Client>			_clients;
+		std::vector<User>			_users;
+		std::vector<Channel>		_channels;
 		std::vector<struct pollfd>	_fds;
 
 	public:
@@ -17,6 +21,7 @@ class Server {
 
 		int				getPort();
 		std::string		getPassword();
+		User			*getUser(int fd);
 
 		void			init();
 		void			createSocket();

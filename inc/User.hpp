@@ -9,6 +9,7 @@ class User {
 		
 	public:
 		User();
+		User(int fd, std::string nickname, std::string username, std::string password);
 		~User();
 		User(User const &src);
 		User &operator=(User const &src);

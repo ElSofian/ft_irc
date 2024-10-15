@@ -13,9 +13,6 @@ Client &Client::operator=(Client const &src) {
 	if (this != &src) {
 		this->_fd = src._fd;
 		this->_ip = src._ip;
-		this->_nickname = src._nickname;
-		this->_username = src._username;
-		this->_password = src._password;
 	}
 	return *this;
 }

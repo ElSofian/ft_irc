@@ -2,6 +2,13 @@
 
 User::User() {}
 
+User::User(int fd, std::string nickname, std::string username, std::string password) {
+	this->_fd = fd;
+	this->_nickname = nickname;
+	this->_username = username;
+	this->_password = password;
+}
+
 User::~User() {}
 
 User::User(User const &src) {

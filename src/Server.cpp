@@ -29,6 +29,14 @@ std::string	Server::getPassword() {
 	return this->_password;
 }
 
+User	*Server::getUser(int fd) {
+	for (size_t i = 0; i < _users.size(); i++) {
+		if (_users[i].getFd() == fd)
+			return &_users[i];
+	}
+	return NULL;
+}
+
 void	Server::init() {
 	signal(SIGINT, signalHandler);
 	signal(SIGQUIT, signalHandler);
