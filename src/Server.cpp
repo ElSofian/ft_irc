@@ -122,6 +122,11 @@ void	Server::acceptNewClient() {
 	_clients.push_back(client);
 	_fds.push_back(newPoll);
 
+	User newUser(newClientFd, "", "", "");
+	_users.push_back(newUser);
+
+	client.setUser(&newUser);
+
 	CLIENT_MSG(GREEN, "Client", "Client ", newClientFd, " is connected !");
 	sendMessage(newClientFd, "Welcome to the server !\n");
 }
@@ -140,6 +145,12 @@ void	Server::receiveData(int fd) {
 		buff[bytes] = '\0';
 		CLIENT_MSG(BLUE, "Client", "Data received: ", fd, buff);
 		//here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
+		// std::cout << "\n-------------------\nraw data:\n" << buff << "\n------------------------\n" << std::endl;
+		
+		User *user = getUser(fd);
+		if (!user)
+			return ;
+		
 		parseData(fd, buff);
 	}
 }

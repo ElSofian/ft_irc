@@ -1,5 +1,4 @@
 # include "Client.hpp"
-# include "User.hpp"
 # include "Channel.hpp"
 
 class Server {

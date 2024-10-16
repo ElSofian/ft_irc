@@ -10,6 +10,7 @@
 #include <csignal>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <sstream>
 
 #define WHITE "\033[1;37m"
@@ -18,8 +19,8 @@
 #define ORANGE "\e[1;33m"
 #define BLUE "\e[1;34m"
 
-#define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
-#define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " #" + channel + "\r\n")
+#define USER(nickname, username) (":" + nickname + "!" + username + "@localhost")
+#define RPL_INVITE(user_id, invited, channel) (user_id + " invited " + invited + " in #" + channel + "\r\n")
 #define MSG(color, prefix, msg) (std::cout << color << "[" << prefix << "] " << WHITE << msg << std::endl)
 #define CLIENT_MSG(color, prefix, msg, nb, msg2) (std::cout << color << "[" << prefix << "] " << WHITE << msg << nb << msg2 << std::endl)
 #define ERR(msg) (std::cout << RED << "[ERROR] " << WHITE << msg << std::endl)

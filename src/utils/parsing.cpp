@@ -1,29 +1,29 @@
 # include "Server.hpp"
 
-void	Server::parseData(int fd, std::string data) {
-	std::string line;
-	std::istringstream stream(data);
-	
-	while (std::getline(stream, line)) {
-		if (line.find("NICK") != std::string::npos) {
-			// handle NICK command
-		} else if (line.find("USER") != std::string::npos) {
-			
-		} else if (line.find("JOIN") != std::string::npos) {
-			// handle JOIN command
-		} else if (line.find("PART") != std::string::npos) {
-			// handle PART command
-		} else if (line.find("PRIVMSG") != std::string::npos) {
-			// handle PRIVMSG command
-		} else if (line.find("QUIT") != std::string::npos) {
-			// handle QUIT command
-		} else if (line.find("PING") != std::string::npos) {
-			
-		} else if (line.find("PONG") != std::string::npos) {
-			// handle PONG command
-		} else {
-			ERR("Invalid command");
-			return;
+void Server::parseData(int fd, std::string data) {
+    std::string delimiter = "\r\n";
+    size_t pos = 0;
+    std::string line;
+
+    while ((pos = data.find(delimiter)) != std::string::npos) {
+        line = data.substr(0, pos);
+        data.erase(0, pos + delimiter.length());
+
+        if (!line.empty()) {
+            std::istringstream iss(line);
+            std::string command;
+            iss >> command;
+
+			User *user = getUser(fd);
+            if (command == "NICK" || command == "USER") {
+                std::string output;
+                iss >> output;
+                command == "NICK" ? user->setNickname(output) : user->setUsername(output);
+            } else if (command != "CAP" && command != "PASS") {
+				ERR("Unknown command: " + command);
+				return ;
+			}
+
 		}
-	}
+    }
 }

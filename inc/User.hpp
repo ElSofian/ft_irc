@@ -14,6 +14,8 @@ class User {
 		User(User const &src);
 		User &operator=(User const &src);
 
+		char		buffer[512];
+
 		int			getFd();
 		std::string	getNickname();
 		std::string	getUsername();

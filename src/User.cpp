@@ -1,6 +1,10 @@
 # include "User.hpp"
 
-User::User() {}
+User::User() {
+	this->_nickname = "";
+	this->_username = "";
+	this->_password = "";
+}
 
 User::User(int fd, std::string nickname, std::string username, std::string password) {
 	this->_fd = fd;
