@@ -42,10 +42,7 @@ void Server::parseData(int fd, std::string data) {
 
                 channel->addUser(*user);
                 sendMessage(fd, "JOIN " + channelName + "\r\n");
-            } else if (command != "CAP" && command != "PASS") {
-				ERR("Unknown command: " + command);
-				return ;
-			}
+            }
 
 		}
     }
