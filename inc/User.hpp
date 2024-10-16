@@ -1,3 +1,6 @@
+#ifndef USER_HPP
+#define USER_HPP
+
 # include "defines.hpp"
 
 class User {
@@ -16,13 +19,15 @@ class User {
 
 		char		buffer[512];
 
-		int			getFd();
-		std::string	getNickname();
-		std::string	getUsername();
-		std::string	getPassword();
+		int			getFd() const;
+		std::string	getNickname() const;
+		std::string	getUsername() const;
+		std::string	getPassword() const;
 
 		void		setFd(int fd);
 		void		setNickname(std::string nickname);
 		void		setUsername(std::string username);
 		void		setPassword(std::string password);
 };
+
+#endif

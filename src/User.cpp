@@ -30,19 +30,19 @@ User &User::operator=(User const &src) {
 	return *this;
 }
 
-int			User::getFd() {
+int			User::getFd() const {
 	return this->_fd;
 }
 
-std::string	User::getNickname() {
+std::string	User::getNickname() const {
 	return this->_nickname;
 }
 
-std::string	User::getUsername() {
+std::string	User::getUsername() const {
 	return this->_username;
 }
 
-std::string	User::getPassword() {
+std::string	User::getPassword() const {
 	return this->_password;
 }
 
