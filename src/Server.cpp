@@ -29,6 +29,14 @@ std::string	Server::getPassword() {
 	return this->_password;
 }
 
+Channel *Server::getChannel(std::string name) {
+	for (size_t i = 0; i < _channels.size(); i++) {
+		if (_channels[i].getChannelName() == name)
+			return &_channels[i];
+	}
+	return NULL;
+}
+
 User	*Server::getUser(int fd) {
 	for (size_t i = 0; i < _users.size(); i++) {
 		if (_users[i].getFd() == fd)
@@ -40,6 +48,8 @@ User	*Server::getUser(int fd) {
 void	Server::init() {
 	signal(SIGINT, signalHandler);
 	signal(SIGQUIT, signalHandler);
+	signal(SIGTERM, signalHandler);
+	signal(SIGPIPE, signalHandler);
 	createSocket();
 
 	while (Server::_signal == false)
@@ -92,6 +102,11 @@ void	Server::createSocket() {
 	std::cout << "Waiting for clients..." << std::endl;
 }
 
+void	Server::sendErrorMessage(int fd, std::string msg) {
+	const std::string errorMsg = std::string(RED) + "[ERROR] " + WHITE + msg + "\r\n";
+	send(fd, errorMsg.c_str(), errorMsg.size(), 0);
+}
+
 void	Server::sendMessage(int fd, std::string msg) {
 	send(fd, msg.c_str(), msg.size(), 0);
 }
@@ -128,7 +143,7 @@ void	Server::acceptNewClient() {
 	client.setUser(&newUser);
 
 	CLIENT_MSG(GREEN, "Client", "Client ", newClientFd, " is connected !");
-	sendMessage(newClientFd, "Welcome to the server !\n");
+	// sendMessage(newClientFd, "Welcome to the server !\n");
 }
 
 void	Server::receiveData(int fd) {
@@ -156,7 +171,8 @@ void	Server::receiveData(int fd) {
 }
 
 void	Server::signalHandler(int signum) {
-	(void)signum;
+	if (signum == SIGPIPE)
+		return ;
 	_signal = true;
 }
 

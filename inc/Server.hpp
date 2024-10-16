@@ -20,11 +20,13 @@ class Server {
 
 		int				getPort();
 		std::string		getPassword();
+		Channel			*getChannel(std::string name);
 		User			*getUser(int fd);
 
 		void			init();
 		void			createSocket();
 		void			acceptNewClient();
+		void			sendErrorMessage(int fd, std::string msg);
 		void			sendMessage(int fd, std::string msg);
 		void			receiveData(int fd);
 		void			parseData(int fd, std::string data);
