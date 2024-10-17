@@ -20,8 +20,10 @@ class Channel {
 
 		const std::string					&getChannelName() const ;
 		const std::string					&getChannelTopic() const ;
+		const std::string					&getChannelPassword() const ;
 		const User							&getChannelOwner() const ;
 		const std::vector<User>				&getMembersList() const ;
+		const std::string					getMembersListNames() const ;
 		const std::vector<std::string>		&getModesList() const ;
 		const std::vector<std::string>		&getMessageHistory() const ;
 

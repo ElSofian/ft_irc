@@ -123,13 +123,29 @@ void	Server::sendMessage(int fd, std::string msg) {
 		if ((bytes = send(fd, msg.c_str() + dataSent, msg.size() - dataSent, MSG_DONTWAIT)) <= 0)
 		{
 			sendErrorMessage(fd, "451 :Client where the message is supposed to be sent is not registered.\r\n");
-			
 			return ;
 		}
 		dataSent += bytes;
 	}
+}
 
-	send(fd, msg.c_str(), msg.size(), MSG_DONTWAIT);
+void	Server::sendMessageToUsers(Channel *chan, std::string authorName, std::string msg) {
+	for (size_t i = 0; i < chan->getMembersList().size(); i++) {
+		if (chan->getMembersList()[i].getNickname() == authorName)
+			continue;
+		sendMessage(chan->getMembersList()[i].getFd(), msg);
+	}
+}
+
+void	Server::createServer(std::string channelName, User &user) {
+	Channel newChannel(channelName, "");
+	_channels.push_back(newChannel);
+	newChannel.addUser(user);
+	// sendMessageToUsers(&newChannel, user.getNickname(), RPL_JOIN(USER(user.getNickname(), user.getUsername()), newChannel.getChannelName()));
+	std::string joinMessage = RPL_TOPIC(user.getNickname(), newChannel.getChannelName(), newChannel.getChannelTopic())		+ 
+									RPL_NAMREPLY(user.getNickname(), newChannel.getChannelName(), newChannel.getMembersListNames())	+ 
+									RPL_ENDOFNAMES(user.getNickname(), newChannel.getChannelName());
+	sendMessage(user.getFd(), joinMessage);
 }
 
 void	Server::acceptNewClient() {
@@ -164,8 +180,7 @@ void	Server::acceptNewClient() {
 	client.setUser(&newUser);
 
 	CLIENT_MSG(GREEN, "Client", "Client ", newClientFd, " is connected !");
-	char welcomeMessage[1024] = "001 Welcome to the server !\n";
-	sendMessage(newClientFd, welcomeMessage);
+	sendMessage(newClientFd, "001 : Welcome to the server !\r\n");
 }
 
 void	Server::receiveData(int fd) {

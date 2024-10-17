@@ -40,6 +40,11 @@ const std::string &Channel::getChannelTopic() const
 	return this->_topic;
 }
 
+const std::string &Channel::getChannelPassword() const
+{
+	return this->_password;
+}
+
 const User &Channel::getChannelOwner() const
 {
 	return this->_users[0];
@@ -48,6 +53,19 @@ const User &Channel::getChannelOwner() const
 const std::vector<User> &Channel::getMembersList() const
 {
 	return this->_users;
+}
+
+const std::string Channel::getMembersListNames() const
+{
+	std::string names;
+
+	for (size_t i = 0; i < _users.size(); i++)
+	{
+		names += _users[i].getNickname();
+		if (i < _users.size() - 1)
+			names += " ";
+	}
+	return names;
 }
 
 const std::vector<std::string> &Channel::getModesList() const
