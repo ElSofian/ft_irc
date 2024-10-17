@@ -104,11 +104,32 @@ void	Server::createSocket() {
 
 void	Server::sendErrorMessage(int fd, std::string msg) {
 	const std::string errorMsg = std::string(RED) + "[ERROR] " + WHITE + msg + "\r\n";
-	send(fd, errorMsg.c_str(), errorMsg.size(), 0);
+	sendMessage(fd, errorMsg);
 }
 
 void	Server::sendMessage(int fd, std::string msg) {
-	send(fd, msg.c_str(), msg.size(), 0);
+	int 		bytes;
+	int 		dataSent = 0;
+	
+	if (msg.size() > 512) {
+		std::cout << "Warning : Message sent is more than 512 characters, truncating the result" << std::endl;
+		msg = msg.substr(0, 510);
+		msg += "\r\n";
+		std::cout << "Warning : message is now [" << msg << "]" << std::endl;
+	}
+	
+	while (size_t(dataSent) < msg.size())
+	{
+		if ((bytes = send(fd, msg.c_str() + dataSent, msg.size() - dataSent, MSG_DONTWAIT)) <= 0)
+		{
+			sendErrorMessage(fd, "451 :Client where the message is supposed to be sent is not registered.\r\n");
+			
+			return ;
+		}
+		dataSent += bytes;
+	}
+
+	send(fd, msg.c_str(), msg.size(), MSG_DONTWAIT);
 }
 
 void	Server::acceptNewClient() {
@@ -143,7 +164,8 @@ void	Server::acceptNewClient() {
 	client.setUser(&newUser);
 
 	CLIENT_MSG(GREEN, "Client", "Client ", newClientFd, " is connected !");
-	// sendMessage(newClientFd, "Welcome to the server !\n");
+	char welcomeMessage[1024] = "001 Welcome to the server !\n";
+	sendMessage(newClientFd, welcomeMessage);
 }
 
 void	Server::receiveData(int fd) {
@@ -159,7 +181,6 @@ void	Server::receiveData(int fd) {
 	} else {
 		buff[bytes] = '\0';
 		CLIENT_MSG(BLUE, "Client", "Data received: ", fd, buff);
-		//here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
 		// std::cout << "\n-------------------\nraw data:\n" << buff << "\n------------------------\n" << std::endl;
 		
 		User *user = getUser(fd);

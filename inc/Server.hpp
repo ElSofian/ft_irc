@@ -35,4 +35,10 @@ class Server {
 
 		void			closeFds();
 		void			clearClient(int fd);
+
+		void			kick(int fd, std::istringstream &iss);
+		void			invite(int fd, std::istringstream &iss);
+		void			topic(int fd, std::istringstream &iss);
+		void			mode(int fd, std::istringstream &iss);
+
 };

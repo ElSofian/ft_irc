@@ -25,22 +25,22 @@ class Channel {
 		const std::vector<std::string>		&getModesList() const ;
 		const std::vector<std::string>		&getMessageHistory() const ;
 
-		void						setChannelName(std::string name);
-		void						setChannelTopic(std::string topic);
-		void						setChannelOwner(User owner);
-		void						setMembersList(std::vector<User> members);
-		void						setMessageHistory(std::vector<std::string> history);
-		void						setModesList(std::vector<std::string> modes);
+		void								setChannelName(std::string name);
+		void								setChannelTopic(std::string topic);
+		void								setChannelOwner(User owner);
+		void								setMembersList(std::vector<User> members);
+		void								setMessageHistory(std::vector<std::string> history);
+		void								setModesList(std::vector<std::string> modes);
 		
 		
-		void						addMode(std::string mode);
-		void						removeMode(std::string mode);
-		void						addUser(User user);
-		void						removeUser(User user);
-		void						addOperator(User user);
-		void						removeOperator(User user);
-		void						sendMessageToChannel(std::string message, std::string author);
-		void						addMessageToHistory(std::string message);
+		void								addMode(std::string mode);
+		void								removeMode(std::string mode);
+		void								addUser(User user);
+		void								removeUser(User user);
+		void								addOperator(User user);
+		void								removeOperator(User user);
+		void								sendMessageToChannel(std::string message, std::string author);
+		void								addMessageToHistory(std::string message);
 
 };
 

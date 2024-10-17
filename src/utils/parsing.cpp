@@ -4,7 +4,6 @@ void Server::parseData(int fd, std::string data) {
     std::string delimiter = "\r\n";
     size_t pos = 0;
     std::string line;
-    static bool welcomeMsgSent = false;
 
     while ((pos = data.find(delimiter)) != std::string::npos) {
         line = data.substr(0, pos);
@@ -16,33 +15,35 @@ void Server::parseData(int fd, std::string data) {
             iss >> command;
 
 			User *user = getUser(fd);
+            if (!user) {
+                sendErrorMessage(fd, "451 :You're not registered\r\n");
+                return ;
+            }
+            
             if (command == "NICK" || command == "USER") {
                 std::string output;
                 iss >> output;
-                command == "NICK" ? user->setNickname(output) : user->setUsername(output);
-                if (!welcomeMsgSent)
-                {
-                    sendMessage(fd, "001 Welcome to the server " + user->getNickname() + "!\r\n");
-                    welcomeMsgSent = true;
+                if (command == "NICK") {
+                    user->setNickname(output);
+                    sendMessage(fd, "Your nickname has been set to " + user->getNickname() + "!\r\n");
+                } else {
+                    user->setUsername(output);
+                    sendMessage(fd, "Your username has been set to " + user->getUsername() + "!\r\n");
                 }
-            } else if (command == "JOIN") {
-                std::string channelName;
-                iss >> channelName;
-                if (channelName.empty()) {
-                    sendMessage(fd, "461 JOIN :Not enough parameters\r\n");
-                    return;
-                }
-
-                Channel *channel = getChannel(channelName);
-                if (!channel) {
-                    Channel newChannel(channelName, "");
-                    _channels.push_back(newChannel);
-                    channel = &_channels.back();
-                }
-
-                channel->addUser(*user);
-                sendMessage(fd, "JOIN " + channelName + "\r\n");
+            } else if (command == "KICK") {
+                kick(fd, iss);
+            } else if (command == "INVITE") {
+                invite(fd, iss);
+            } else if (command == "TOPIC") {
+                topic(fd, iss);
+            } else if (command == "PONG") {
+                std::string output;
+                iss >> output;
+                sendMessage(fd, "PONG " + output + "\r\n");
             }
+            // else if (command == "MODE") {
+            //     mode(fd, iss);
+            // }
 
 		}
     }
