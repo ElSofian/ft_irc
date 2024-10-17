@@ -1,6 +1,54 @@
 # include "Utils.hpp"
 # include "Server.hpp"
 
+void	Server::nick(int fd, std::istringstream &iss) {
+	std::string nickname;
+
+	iss >> nickname;
+
+	User *user = getUser(fd);
+	if (user == NULL) {
+		sendErrorMessage(fd, "451 :You're not registered\r\n");
+		return ;
+	}
+
+	if (user->getNickname() == "") {
+		user->setNickname(nickname);
+		sendMessage(user->getFd(), RPL_WELCOME(nickname));
+		return ;
+	}
+
+	std::cout << "ok" << std::endl;
+	std::cout << "nikname: " << nickname << std::endl;
+
+	if (user->getNickname() != "" && user->getNickname() != nickname) {
+		std::string oldNickname = user->getNickname();
+		std::cout << "ok2" << std::endl;
+		std::cout << "new nickname: " << nickname << std::endl;
+
+		user->setNickname(nickname);
+		std::string RPLMessage = ":" + oldNickname + " NICK " + nickname + "\r\n";
+		sendMessage(user->getFd(), RPLMessage);
+		return;
+	}
+
+	if (user != NULL && user->getNickname() == "" && user->getFd() != fd) {
+		std::cout << "ok3" << std::endl;
+		Channel *channel = getChannel(nickname);
+		int	i = 1;
+		while (getUserByNickname(nickname, channel) != NULL)
+			i++;
+		if (i > 1)
+			nickname += itoa(i);
+
+		std::cout << "new nickname (2): " << nickname << std::endl;
+		std::cout << "ok4" << std::endl;
+		user->setNickname(nickname);
+		sendMessage(user->getFd(), RPL_WELCOME(nickname));
+	}
+
+}
+
 void	Server::join(int fd, std::istringstream &iss) {
 	std::string channel;
 	std::string password;

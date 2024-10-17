@@ -15,3 +15,16 @@ int	atoi(char *str) {
 	}
 	return (result * sign);
 }
+
+std::string itoa(int nb) {
+	std::string str;
+	std::string result;
+
+	while (nb > 0) {
+		str += nb % 10 + '0';
+		nb /= 10;
+	}
+	for (int i = str.size() - 1; i >= 0; i--)
+		result += str[i];
+	return result;
+}

@@ -21,6 +21,7 @@ class Server {
 		int				getPort();
 		std::string		getPassword();
 		Channel			*getChannel(std::string name);
+		const User			*getUserByNickname(std::string nickname, Channel *channel) const;
 		User			*getUser(int fd);
 
 
@@ -39,6 +40,7 @@ class Server {
 		void			closeFds();
 		void			clearClient(int fd);
 
+		void			nick(int fd, std::istringstream &iss);
 		void			join(int fd, std::istringstream &iss);
 		void			kick(int fd, std::istringstream &iss);
 		void			invite(int fd, std::istringstream &iss);

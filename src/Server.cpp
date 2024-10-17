@@ -45,6 +45,14 @@ User	*Server::getUser(int fd) {
 	return NULL;
 }
 
+const User	*Server::getUserByNickname(std::string nickname, Channel *channel) const {
+	for (size_t i = 0; i < channel->getMembersList().size(); i++) {
+		if (channel->getMembersList()[i].getNickname() == nickname)
+			return &channel->getMembersList()[i];
+	}
+	return NULL;
+}
+
 void	Server::init() {
 	signal(SIGINT, signalHandler);
 	signal(SIGQUIT, signalHandler);
@@ -180,7 +188,7 @@ void	Server::acceptNewClient() {
 	client.setUser(&newUser);
 
 	CLIENT_MSG(GREEN, "Client", "Client ", newClientFd, " is connected !");
-	sendMessage(newClientFd, "001 : Welcome to the server !\r\n");
+	// sendMessage(newClientFd, "001 : Welcome to the server !\r\n");
 }
 
 void	Server::receiveData(int fd) {

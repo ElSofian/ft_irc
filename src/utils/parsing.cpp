@@ -20,16 +20,12 @@ void Server::parseData(int fd, std::string data) {
                 return ;
             }
 
-            if (command == "NICK" || command == "USER") {
+            if (command == "NICK") {
+                nick(fd, iss);
+            } else if (command == "USER") {
                 std::string output;
                 iss >> output;
-                if (command == "NICK") {
-                    user->setNickname(output);
-                    sendMessage(fd, "Your nickname has been set to " + user->getNickname() + "!\r\n");
-                } else if (command == "USER") {
-                    user->setUsername(output);
-                    sendMessage(fd, "Your username has been set to " + user->getUsername() + "!\r\n");
-                }
+                user->setUsername(output);
             } else if (command == "JOIN") {
                 join(fd, iss);
             } else if (command == "KICK") {
